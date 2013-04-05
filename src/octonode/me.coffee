@@ -153,14 +153,14 @@ class Me
 
   # List your repositories
   # '/user/repos' GET
-  repos: (cbOrRepo, cb) ->
-    if typeof cb is 'function' and typeof cbOrRepo is 'object'
-      @createRepo cbOrRepo, cb
-    else
-      cb = cbOrRepo
-      @client.get "/user/repos", (err, s, b) ->
-        return cb(err) if err
-        if s isnt 200 then cb(new Error('User repos error')) else cb null, b
+  # - page, optional - params[0]
+  # - per_page, optional - params[1]
+  repos: (params..., cb) ->
+    page = params[0] || 1
+    per_page = params[1] || 30
+    @client.get "/user/repos", page, per_page, (err, s, b) ->
+      return cb(err) if err
+      if s isnt 200 then cb(new Error('User repos error')) else cb null, b
 
   # Create a repository
   # '/user/repos' POST
